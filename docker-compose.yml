@@ -1,0 +1,75 @@
+ 
+
+
+services:
+
+  mongodb:
+    image: mongo:6.0
+    container_name: studyos-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - studyos-network
+
+  auth-service:
+    build: ./services/auth-service
+    container_name: studyos-auth
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - MONGO_URI=mongodb://mongodb:27017/studyos
+      - JWT_SECRET=studyos_super_secret_key
+    depends_on:
+      - mongodb
+    networks:
+      - studyos-network
+
+  task-service:
+    build: ./services/task-service
+    container_name: studyos-task
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongodb:27017/studyos
+      - JWT_SECRET=studyos_super_secret_key
+      - AUTH_SERVICE_URL=http://auth-service:5002
+    depends_on:
+      - mongodb
+      - auth-service
+    networks:
+      - studyos-network
+
+  scheduler-service:
+    build: ./services/scheduler-service
+    container_name: studyos-scheduler
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - TASK_SERVICE_URL=http://task-service:5001
+    depends_on:
+      - task-service
+    networks:
+      - studyos-network
+
+  frontend:
+    build: ./frontend
+    container_name: studyos-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-service
+      - task-service
+    networks:
+      - studyos-network
+
+networks:
+  studyos-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
