@@ -57,7 +57,7 @@ pipeline {
         success {
             echo 'Pipeline completed successfully! StudyOS is deployed.'
             mail(
-                to: '1762003rajpurohit@gmail.com',
+                to: 'kpbhai0705@gmail.com',
                 subject: "✅ StudyOS Pipeline SUCCESS - Build #${env.BUILD_NUMBER}",
                 body: """
 Hello,
@@ -88,7 +88,7 @@ Jenkins CI/CD
         failure {
             echo 'Pipeline failed! Check the logs above.'
             mail(
-                to: '1762003rajpurohit@gmail.com',
+                to: 'kpbhai0705@gmail.com',
                 subject: "❌ StudyOS Pipeline FAILED - Build #${env.BUILD_NUMBER}",
                 body: """
 Hello,
