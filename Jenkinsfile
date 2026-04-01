@@ -30,31 +30,31 @@ pipeline {
         }
 
         stage('Test') {
-    steps {
-        echo 'Running frontend tests...'
-
-        dir('frontend') {
-            bat 'npm install'
-            bat 'npm test -- --watchAll=false'
+            steps {
+                echo 'Running frontend tests...'
+        
+                dir('frontend') {
+                    bat 'npm install'
+                    bat 'npm test -- --watchAll=false'
+                }
+        
+                echo 'Running backend service checks...'
+        
+                dir('services/auth-service') {
+                    bat 'npm install'
+                    bat 'npm test'
+                }
+        
+                dir('services/task-service') {
+                    bat 'npm install'
+                    bat 'npm test'
+                }
+        
+                dir('services/scheduler-service') {
+                    bat 'npm install'
+                    bat 'npm test'
+                }
         }
-
-        echo 'Running backend service checks...'
-
-        dir('services/auth-service') {
-            bat 'npm install'
-            bat 'npm test'
-        }
-
-        dir('services/task-service') {
-            bat 'npm install'
-            bat 'npm test'
-        }
-
-        dir('services/scheduler-service') {
-            bat 'npm install'
-            bat 'npm test'
-        }
-    }
 }
 
         stage('Docker Build') {
