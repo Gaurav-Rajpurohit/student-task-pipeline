@@ -28,9 +28,9 @@ pipeline {
                 }
             }
         }
-
+//adding tests
         stage('Test') {
-            steps {
+             steps {
                 echo 'Running frontend tests...'
         
                 dir('frontend') {
